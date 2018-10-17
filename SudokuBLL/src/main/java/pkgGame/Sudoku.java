@@ -410,4 +410,25 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
+	
+	public class cell() {
+		private int iRow;
+		private int iCol;
+		private ArrayList<int> lstValidValues;
+		
+		private int getiRow() {
+			return iRow;
+		}
+		private int getiCol() {
+			return iCol;
+		}
+		private hashCode{
+		
+		}
+		
+		@Override 
+		private equals{
+			
+		}
+	}
 }
