@@ -430,5 +430,13 @@ public class Sudoku extends LatinSquare {
 		private equals{
 			
 		}
+		
+		public ArrayList<int> getlstValidValues() {
+			return this.lstValidValues;
+		}
+		
+		public void setlstValidValues(HashSet<Integer> hash) {
+			
+		}
 	}
 }
