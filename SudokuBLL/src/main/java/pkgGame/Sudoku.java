@@ -448,8 +448,8 @@ public class Sudoku extends LatinSquare {
  		}
 		
 		@Override 
-		private equals{
-			
+		private boolean equals{
+		
 		}
 		
 		public ArrayList<int> getlstValidValues() {
