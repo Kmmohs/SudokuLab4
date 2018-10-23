@@ -448,8 +448,13 @@ public class Sudoku extends LatinSquare {
  		}
 		
 		@Override 
-		private boolean equals{
-		
+		private boolean equals(Object o){
+			//equals – override to ensure object is equal by Row/Col
+			if(!(o instanceof Cell)) {
+				return false;
+			}
+			return this.iRow==o.iRow&& this.iCol==o.iCol;
+			
 		}
 		
 		public ArrayList<int> getlstValidValues() {
