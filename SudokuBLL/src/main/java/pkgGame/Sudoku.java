@@ -20,7 +20,7 @@ import pkgHelper.LatinSquare;
  */
 public class Sudoku extends LatinSquare {
 	
-	private HashMap<Integer, Sudoku.Cell> cellMap;
+	private HashMap<Integer, Sudoku.Cell> cellMap = new HashMap<Integer, Sudoku.Cell>();
 
 	/**
 	 * 
@@ -417,10 +417,16 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 	
-	public class Cell {
+	public class Cell extends {
 		private int iRow;
 		private int iCol;
-		private ArrayList<Integer> lstValidValues= new ArrayList<Integer>();
+		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
+		
+		public Cell(int iRow, int iCol){
+			super();
+			this.iRow = iRow;
+			this.iCol = iCol;
+		}
 		
 		private int getiRow() {
 			return iRow;
@@ -439,7 +445,7 @@ public class Sudoku extends LatinSquare {
  				return true;
  			}
  			
- 			for (int num:c.getLstValidValues()) {
+ 			for (int num:c.getlstValidValues()) {
  				if(isValidValue(c,num)) {
  					this.getPuzzle()[c.getiRow()][c.getiCol()]=num;
  					if(fillRemaining(c.GetNextCell(c))) {
@@ -457,16 +463,37 @@ public class Sudoku extends LatinSquare {
 			if(!(o instanceof Cell)) {
 				return false;
 			}
-			return this.iRow==o.iRow&& this.iCol==o.iCol;
+			return this.iRow==o.iRow && this.iCol==o.iCol;
 			
 		}
 		
-		public ArrayList<int> getlstValidValues() {
+		public ArrayList<Integer> getlstValidValues() {
 			return this.lstValidValues;
 		}
 		
 		public void setlstValidValues(HashSet<Integer> hash) {
 			this.lstValidValues = new ArrayList<Integer>(hash);
 		}
+	}
+	
+	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
+		HashSet<Integer> validCellValues = new HashSet<Integer>();
+		for (int i = 0; i < iSize; i++) {
+			if (isValidValue(iRow, iCol, i))
+				validCellValues.add(i);
+		}
+		return validCellValues;
+	}
+	
+	private void SetCells() {
+		for (int row = 0; row < iSize; row++) {
+			for (int col = 0; col < iSize; col++) {
+				Cell cell = new Cell(row, col);
+				cell.setlstValidValues(getAllValidCellValues(row, col));
+				cell.ShuffleValidValues();
+				cellMap.put(c.hashCode(), cell);
+			}
+		}
+		 
 	}
 }
