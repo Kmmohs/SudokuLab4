@@ -491,9 +491,22 @@ public class Sudoku extends LatinSquare {
 				Cell cell = new Cell(row, col);
 				cell.setlstValidValues(getAllValidCellValues(row, col));
 				cell.ShuffleValidValues();
-				cellMap.put(c.hashCode(), cell);
+				cellMap.put(cell.hashCode(), cell);
 			}
 		}
-		 
+	}
+	
+	public Cell GetNextCell(Cell c) {
+		int iCol = c.getiCol()+1;
+		int iRow = c.getiRow();
+		int iSqrtSize = (int) Math.sqrt(iSize);
+
+		if (iCol >= iSize && iRow< iSize - 1) {
+			iRow = iRow + 1;
+			iCol = 0;
+		}
+		if (iRow >= Math.sqrt(iSize)) {
+			return null;	
+		}
 	}
 }
