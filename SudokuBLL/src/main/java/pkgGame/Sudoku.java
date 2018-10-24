@@ -2,6 +2,8 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
@@ -17,6 +19,8 @@ import pkgHelper.LatinSquare;
  *
  */
 public class Sudoku extends LatinSquare {
+	
+	private HashMap<Integer, Sudoku.Cell> cellMap;
 
 	/**
 	 * 
@@ -449,7 +453,7 @@ public class Sudoku extends LatinSquare {
 		
 		@Override 
 		private boolean equals(Object o){
-			//equals – override to ensure object is equal by Row/Col
+			//equals ï¿½ override to ensure object is equal by Row/Col
 			if(!(o instanceof Cell)) {
 				return false;
 			}
