@@ -20,7 +20,7 @@ import pkgHelper.LatinSquare;
  *
  */
 public class Sudoku extends LatinSquare {
-	
+
 	private HashMap<Integer, Sudoku.Cell> cellMap = new HashMap<Integer, Sudoku.Cell>();
 
 	/**
@@ -275,7 +275,7 @@ public class Sudoku extends LatinSquare {
 	 * @return - returns 'true' if the proposed value is valid for the row and column
 	 */
 	public boolean isValidValue(int iRow,int iCol,  int iValue) {
-		
+
 		if (doesElementExist(super.getRow(iRow),iValue))
 		{
 			return false;
@@ -288,7 +288,7 @@ public class Sudoku extends LatinSquare {
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -417,18 +417,18 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
-	
+
 	public class Cell {
 		private int iRow;
 		private int iCol;
 		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
-		
+
 		public Cell(int iRow, int iCol){
 			super();
 			this.iRow = iRow;
 			this.iCol = iCol;
 		}
-		
+
 		private int getiRow() {
 			return iRow;
 		}
@@ -439,79 +439,81 @@ public class Sudoku extends LatinSquare {
 		public int hashCode() {
 			return Objects.hash(iRow,iCol);
 		}
-		
+
 		private boolean fillRemaining(Cell c) {
- 			
- 			if(c==null) {
- 				return true;
- 			}
- 			
- 			for (int num:c.getlstValidValues()) {
- 				if(isValidValue(c,num)) {
- 					this.getPuzzle()[c.getiRow()][c.getiCol()]=num;
- 					if(fillRemaining(c.GetNextCell(c))) {
- 						return true;
- 						}
- 					this.getPuzzle()[c.getiRow()][c.getiCol()]=0;
- 				}
- 			}
- 			return false;
- 		}
-		
+
+			if(c==null) {
+				return true;
+			}
+
+			for (int num:c.getlstValidValues()) {
+				if(isValidValue(c,num)) {
+					Sudoku.getPuzzle()[c.getiRow()][c.getiCol()]=num;
+					if(fillRemaining(c.GetNextCell(c))) {
+						return true;
+					}
+					this.getPuzzle()[c.getiRow()][c.getiCol()]=0;
+				}
+			}
+			return false;
+		}
+
 		@Override 
 		private boolean equals(Object o){
 			//equals � override to ensure object is equal by Row/Col
 			if(!(o instanceof Cell)) {
 				return false;
 			}
-			return this.iRow==o.iRow && this.iCol==o.iCol;
-			
+			Cell cell = (Cell) o;
+			return this.iRow==cell.iRow && this.iCol==cell.iCol;
+
 		}
-		
+
 		public ArrayList<Integer> getlstValidValues() {
 			return this.lstValidValues;
 		}
-		
+
 		public void setlstValidValues(HashSet<Integer> hash) {
 			this.lstValidValues = new ArrayList<Integer>(hash);
 		}
+		
+		public Cell GetNextCell(Cell c) {
+			int iCol = c.getiCol()+1;
+			int iRow = c.getiRow();
+			int iSqrtSize = (int) Math.sqrt(iSize);
+
+			if (iCol >= iSize && iRow< iSize - 1) {
+				iRow = iRow + 1;
+				iCol = 0;
+			}
+			if (iRow >= Math.sqrt(iSize)) {
+				return null;	
+			}
+		}
+		
+		private void SetCells() {
+			for (int row = 0; row < iSize; row++) {
+				for (int col = 0; col < iSize; col++) {
+					Cell cell = new Cell(row, col);
+					cell.setlstValidValues(getAllValidCellValues(row, col));
+					cell.ShuffleValidValues();
+					cellMap.put(cell.hashCode(), cell);
+				}
+			}
+		}
+		
+		public void ShuffleValidValues() {
+			Collections.shuffle(lstValidValues);
+		}
+		
 	}
 	
 	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
 		HashSet<Integer> validCellValues = new HashSet<Integer>();
-		for (int i = 0; i < iSize; i++) {
+		for (int i = 1; i <= iSize; i++) {
 			if (isValidValue(iRow, iCol, i))
 				validCellValues.add(i);
 		}
 		return validCellValues;
-	}
-	
-	private void SetCells() {
-		for (int row = 0; row < iSize; row++) {
-			for (int col = 0; col < iSize; col++) {
-				Cell cell = new Cell(row, col);
-				cell.setlstValidValues(getAllValidCellValues(row, col));
-				cell.ShuffleValidValues();
-				cellMap.put(cell.hashCode(), cell);
-			}
-		}
-	}
-	
-	public Cell GetNextCell(Cell c) {
-		int iCol = c.getiCol()+1;
-		int iRow = c.getiRow();
-		int iSqrtSize = (int) Math.sqrt(iSize);
-
-		if (iCol >= iSize && iRow< iSize - 1) {
-			iRow = iRow + 1;
-			iCol = 0;
-		}
-		if (iRow >= Math.sqrt(iSize)) {
-			return null;	
-		}
-	}
-	
-	public void ShuffleValidValues() {
-		Collections.shuffle(lstValidValues);
 	}
 }
