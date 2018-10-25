@@ -417,6 +417,17 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
+	
+	public boolean isValidValue(Cell acell, int iValue) {
+		int iCol = acell.getiCol();
+		int iRow = acell.getiRow();
+		boolean isValid = false;
+		
+		if (this.isValidValue(iRow, iCol, iValue)) {
+			isValid = true;
+		}
+		return isValid;
+	}
 
 	public class Cell {
 		private int iRow;
@@ -440,26 +451,8 @@ public class Sudoku extends LatinSquare {
 			return Objects.hash(iRow,iCol);
 		}
 
-		private boolean fillRemaining(Cell c) {
-
-			if(c==null) {
-				return true;
-			}
-
-			for (int num:c.getlstValidValues()) {
-				if(isValidValue(c,num)) {
-					Sudoku.getPuzzle()[c.getiRow()][c.getiCol()]=num;
-					if(fillRemaining(c.GetNextCell(c))) {
-						return true;
-					}
-					this.getPuzzle()[c.getiRow()][c.getiCol()]=0;
-				}
-			}
-			return false;
-		}
-
 		@Override 
-		private boolean equals(Object o){
+		public boolean equals(Object o){
 			//equals � override to ensure object is equal by Row/Col
 			if(!(o instanceof Cell)) {
 				return false;
@@ -489,17 +482,8 @@ public class Sudoku extends LatinSquare {
 			if (iRow >= Math.sqrt(iSize)) {
 				return null;	
 			}
-		}
-		
-		private void SetCells() {
-			for (int row = 0; row < iSize; row++) {
-				for (int col = 0; col < iSize; col++) {
-					Cell cell = new Cell(row, col);
-					cell.setlstValidValues(getAllValidCellValues(row, col));
-					cell.ShuffleValidValues();
-					cellMap.put(cell.hashCode(), cell);
-				}
-			}
+			
+			return (Cell)cellMap.get(Objects.hash(iRow, iCol));
 		}
 		
 		public void ShuffleValidValues() {
@@ -508,11 +492,45 @@ public class Sudoku extends LatinSquare {
 		
 	}
 	
+	private boolean fillRemaining(Cell c) {
+
+		if(c==null) {
+			return true;
+		}
+
+		for (int num:c.getlstValidValues()) {
+			if(isValidValue(c,num)) {
+				this.getPuzzle()[c.getiRow()][c.getiCol()]=num;
+				if(fillRemaining(c.GetNextCell(c))) {
+					return true;
+				}
+				this.getPuzzle()[c.getiRow()][c.getiCol()]=0;
+			}
+		}
+		return false;
+	}
+	
+	private void SetCells() {
+		for (int row = 0; row < iSize; row++) {
+			for (int col = 0; col < iSize; col++) {
+				Cell cell = new Cell(row, col);
+				cell.setlstValidValues(getAllValidCellValues(row, col));
+				cell.ShuffleValidValues();
+				cellMap.put(cell.hashCode(), cell);
+			}
+		}
+	}
+	
 	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
 		HashSet<Integer> validCellValues = new HashSet<Integer>();
-		for (int i = 1; i <= iSize; i++) {
-			if (isValidValue(iRow, iCol, i))
-				validCellValues.add(i);
+		if (this.getPuzzle()[iRow][iCol] != 0) {
+			validCellValues.add(this.getPuzzle()[iRow][iCol]);
+		}
+		else {
+			for (int i = 1; i <= iSize; i++) {
+				if (isValidValue(iRow, iCol, i))
+					validCellValues.add(i);
+			}
 		}
 		return validCellValues;
 	}
