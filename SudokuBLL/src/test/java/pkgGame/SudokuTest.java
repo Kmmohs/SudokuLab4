@@ -123,7 +123,14 @@ public class SudokuTest {
 
 	}
 
-
+	@Test
+	public void equals_test() {
+	}
+	
+	@Test
+	public void hashCode_Test() {
+		
+	} 
 
 
 
